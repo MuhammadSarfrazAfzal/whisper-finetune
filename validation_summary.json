@@ -1,0 +1,60 @@
+{
+  "status": "PASSED",
+  "total_clips": 600,
+  "total_duration_hr": 1.7681499999999999,
+  "splits": {
+    "train": {
+      "csv_path": "D:\\Finetunning\\whisper-finetune\\train.csv",
+      "split": "train",
+      "count": 488,
+      "total_duration_sec": 5241.819999999999,
+      "total_duration_hr": 1.4560611111111108,
+      "avg_duration_sec": 10.741434426229505,
+      "min_duration_sec": 2.7,
+      "max_duration_sec": 30.6,
+      "sample_rates": [
+        16000
+      ],
+      "channels": [
+        1
+      ]
+    },
+    "validation": {
+      "csv_path": "D:\\Finetunning\\whisper-finetune\\validation.csv",
+      "split": "validation",
+      "count": 46,
+      "total_duration_sec": 450.66,
+      "total_duration_hr": 0.12518333333333334,
+      "avg_duration_sec": 9.796956521739132,
+      "min_duration_sec": 3.96,
+      "max_duration_sec": 17.04,
+      "sample_rates": [
+        16000
+      ],
+      "channels": [
+        1
+      ]
+    },
+    "test": {
+      "csv_path": "D:\\Finetunning\\whisper-finetune\\test.csv",
+      "split": "test",
+      "count": 66,
+      "total_duration_sec": 672.8600000000004,
+      "total_duration_hr": 0.18690555555555566,
+      "avg_duration_sec": 10.19484848484849,
+      "min_duration_sec": 3.84,
+      "max_duration_sec": 24.18,
+      "sample_rates": [
+        16000
+      ],
+      "channels": [
+        1
+      ]
+    }
+  },
+  "tokenizer_compatibility": {
+    "status": "SKIPPED",
+    "reason": "transformers package not installed"
+  },
+  "errors": {}
+}

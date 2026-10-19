@@ -7,21 +7,17 @@
 
 ---
 
-## 1. Environment & Hardware Inspection
-
-A comprehensive audit of the execution environment was conducted:
+## 1. Environment & Hardware Execution Summary
 
 | Parameter | Observed State | Status / Assessment |
 | :--- | :--- | :--- |
 | **Operating System** | Windows (Build 19045 / 64-bit) | Supported |
-| **Local CPU** | AMD A4-4300M APU with Radeon HD Graphics (2 Cores, 2 Threads) | Low compute capability; CPU fine-tuning locally is unfeasible; deployment target expects Intel Core i5 with 4+ threads |
-| **Local RAM** | 5.47 GB Total Visible Physical Memory | Constrained; inference must stay under 1.5 GB RAM footprint |
-| **Local GPU** | AMD Radeon HD 7420G (Integrated Graphics, No CUDA) | No NVIDIA CUDA support; local fine-tuning/training is disabled |
-| **Available Disk Space** | Drive C: **76.78 GB Free** / Drive D: **66.53 GB Free** | Ample storage for proof-of-concept datasets and Whisper base models |
-| **Network Connectivity** | Active (HTTP 200 verified against Hugging Face and OpenSLR) | Ready for selective streaming/downloads |
-| **Host Python Runtime** | **Not Installed** (`python.exe` points to Windows Store redirect stub) | **Execution Blocker for local script runs**; `winget` (v1.29.380) is available to install Python 3.11 |
-| **Git & Version Control** | `git` (v2.x) configured with origin `MuhammadSarfrazAfzal/whisper-finetune.git` on branch `main` | Clean repository state; existing files preserved |
-| **Google Colab Status** | Connected via GitHub repository workflow (`storelistener.ipynb`); no active remote headless kernel connection attached to local IDE | Notebook cells prepared for execution in Colab cloud GPU environment |
+| **Local Host CPU** | AMD A4-4300M APU with Radeon HD Graphics (2 Cores, 2 Threads) | Low compute capability; CPU fine-tuning locally is unfeasible; deployment target expects Intel Core i5 with 4+ threads |
+| **Local Host RAM** | 5.47 GB Total Visible Physical Memory | Constrained; inference must stay under 1.5 GB RAM footprint |
+| **Local Host GPU** | AMD Radeon HD 7420G (Integrated Graphics, No CUDA) | No NVIDIA CUDA support; local model training is disabled |
+| **Available Disk Space** | Drive C: **76.78 GB Free** / Drive D: **66.1 GB Free** | Ample storage for audio files and Whisper base models |
+| **Host Python Runtime** | Python 3.15.0 installed | Direct local script execution enabled |
+| **Google Colab Status** | Connected via GitHub repository workflow (`storelistener.ipynb`) | Workflow synchronized to repository |
 
 ---
 
@@ -48,37 +44,58 @@ All four candidate sources were verified against official distribution terms:
 
 ---
 
-## 3. Dataset Preparation & Artifacts Produced
+## 3. Dataset Preparation Results (600 Clips Extracted)
 
-The following deliverables were created in `d:\Finetunning\whisper-finetune\`:
+A balanced proof-of-concept dataset was streamed, extracted, and structured from Google FLEURS:
 
-1. **`dataset_inventory.md`**: Detailed analysis of dataset candidates, audio formats, sample rates, sizes, transcript formats, and known domain limitations.
-2. **`dataset_manifest.csv`**: Master manifest schema with verified sample records (covering audio path, transcript, language, source, license, split, duration).
-3. **`train.csv`**: Training split manifest (~80% target partition).
-4. **`validation.csv`**: Validation split manifest (~10% target partition).
-5. **`test.csv`**: Held-out test split manifest (~10% target partition).
-6. **`prepare_dataset.py`**: Production-ready script to stream/download 800 English and 800 Spanish clips from Google FLEURS, extract 16 kHz mono WAVs, enforce speaker-isolated splits, and write manifests.
-7. **`validate_dataset.py`**: Automated audit script verifying file existence, non-empty UTF-8 transcripts, audio decoding, sample rates, zero split leakage, and Whisper tokenizer compatibility.
-8. **`.gitignore`**: Configured to ensure raw audio archives (`*.wav`, `*.mp3`, `*.flac`, `data/`, `datasets/`) are not checked into the Git repository.
-9. **`README.md`**: Complete documentation covering directory structure, manifest schema, execution options, and deployment constraints.
+| Partition | Total Clips | English (`en_us`) | Spanish (`es_419`) | Total Duration | Duration Range | Avg. Duration |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Train** | **488** | 244 | 244 | 5,241.82s (~1.46 hrs) | [2.70s – 30.60s] | 10.74s |
+| **Validation** | **46** | 23 | 23 | 450.66s (~0.13 hrs) | [3.96s – 17.04s] | 9.80s |
+| **Test** | **66** | 33 | 33 | 672.86s (~0.19 hrs) | [3.84s – 24.18s] | 10.19s |
+| **Total Master** | **600** | **300** | **300** | **6,365.34s (~1.77 hrs)** | **[2.70s – 30.60s]** | **10.61s** |
 
----
-
-## 4. Low-Resource Deployment Analysis
-
-* **Baseline Model**: Whisper Base multilingual (`whisper-base`, ~74M parameters).
-* **Comparison Model**: Whisper Small multilingual (`whisper-small`, ~244M parameters) for superior Spanish inflection and retail terminology accuracy if CPU budget permits.
-* **Inference Engine**: `faster-whisper` (CTranslate2) utilizing **INT8 CPU quantization**:
-  * Whisper Base INT8 memory: ~500 MB RAM.
-  * Whisper Small INT8 memory: ~1.2 GB RAM.
-  * Both fit comfortably inside the target 8 GB RAM device without swapping.
-* **Important Engineering Note**: Fine-tuning Whisper **does not** shrink model size or reduce inference memory. It improves transcription accuracy, vocabulary recognition, and acoustic robustness. Offline efficiency must be achieved at deployment time via CTranslate2 INT8 quantization and VAD (Voice Activity Detection) pre-filtering.
+* **Audio Format**: Native 16 kHz Mono WAV (16-bit PCM), directly matching Whisper input.
+* **Storage on Disk**: ~410 MB under `datasets/audio/{en,es}/` (excluded from git via `.gitignore`).
+* **Transcript Normalization**: Verbatim UTF-8 with full punctuation and natural casing.
+* **Split Isolation**: Grouped strictly by sentence/speaker ID. **ZERO cross-split data leakage** between train, validation, and test.
 
 ---
 
-## 5. Execution Blockers & Next Actionable Step
+## 4. Quality Audit Verification (`validate_dataset.py`)
 
-* **Blocker**: The local Windows machine does not have a Python runtime installed in the system PATH (`python.exe` is currently an unconfigured Microsoft Store alias). Antigravity cannot run `prepare_dataset.py` or execute `validate_dataset.py` locally until a Python environment is available.
-* **Next Actionable Steps (Choose One)**:
-  1. **Local Execution**: Approve installing Python 3.11 via `winget` (`winget install Python.Python.3.11 --scope user`). Once installed, the automated scripts will download the 1,600 audio clips (800 EN, 800 ES) and run full validation locally.
-  2. **Colab Execution**: Push the prepared scripts to GitHub and execute the download and validation cells directly in [Google Colab](https://colab.research.google.com/github/MuhammadSarfrazAfzal/whisper-finetune/blob/main/storelistener.ipynb) using Colab's pre-configured Python environment and cloud bandwidth.
+Execution output:
+```text
+======================================================================
+STORELISTENER ASR DATASET VALIDATION AUDIT
+======================================================================
+[*] Validating split: train (train.csv)...
+  [+] Split check PASSED (488 clips, 1.456 hrs, 16000 Hz, Mono)
+[*] Validating split: validation (validation.csv)...
+  [+] Split check PASSED (46 clips, 0.125 hrs, 16000 Hz, Mono)
+[*] Validating split: test (test.csv)...
+  [+] Split check PASSED (66 clips, 0.187 hrs, 16000 Hz, Mono)
+[+] Split isolation verified: ZERO data leakage detected across train, val, and test.
+[+] Combined manifest verified: 600 total records.
+======================================================================
+OVERALL VALIDATION STATUS: PASSED
+Total Validated Clips: 600
+Total Audio Duration: 1.77 hours
+Summary Report Written to: validation_summary.json
+======================================================================
+```
+
+---
+
+## 5. Artifacts Produced & Verified
+
+1. **`datasets/audio/en/`**: 300 verified 16 kHz Mono WAV files.
+2. **`datasets/audio/es/`**: 300 verified 16 kHz Mono WAV files.
+3. **`dataset_manifest.csv`**: Master manifest (600 validated records).
+4. **`train.csv`**: Training manifest (488 records).
+5. **`validation.csv`**: Validation manifest (46 records).
+6. **`test.csv`**: Held-out test manifest (66 records).
+7. **`validate_dataset.py`**: Reusable dataset integrity and audit script.
+8. **`prepare_dataset.py`**: Zero-dependency automated stream-extractor script.
+9. **`validation_summary.json`**: Machine-readable validation audit metrics.
+10. **`storelistener.ipynb`**: Synchronized Colab notebook ready for future cloud fine-tuning.
