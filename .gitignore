@@ -1,0 +1,31 @@
+# Audio datasets and archives
+data/
+datasets/
+raw_data/
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.tar.gz
+*.tar
+*.zip
+
+# Python & Environment
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+
+# Hugging Face and Torch caches
+.cache/
+huggingface/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

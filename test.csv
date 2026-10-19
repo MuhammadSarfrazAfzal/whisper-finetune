@@ -1,0 +1,3 @@
+audio_path,transcript,language,dataset_source,license,split,duration_seconds
+datasets/audio/en/en_0005_fleurs_spk104.wav,"All items on shelf three are eligible for immediate discount.",en,Google FLEURS (en_us),CC BY 4.0,test,4.780
+datasets/audio/es/es_0005_fleurs_spk204.wav,"Todos los artículos del estante tres tienen descuento directo.",es,Google FLEURS (es_419),CC BY 4.0,test,4.650

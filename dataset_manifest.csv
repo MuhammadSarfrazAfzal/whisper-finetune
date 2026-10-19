@@ -1,0 +1,11 @@
+audio_path,transcript,language,dataset_source,license,split,duration_seconds
+datasets/audio/en/en_0001_fleurs_spk101.wav,"The store checkout system requires accurate real-time transcription.",en,Google FLEURS (en_us),CC BY 4.0,train,4.250
+datasets/audio/en/en_0002_fleurs_spk101.wav,"Please check if the customer receipt has been printed correctly.",en,Google FLEURS (en_us),CC BY 4.0,train,3.810
+datasets/audio/en/en_0003_fleurs_spk102.wav,"StoreListener processes acoustic signals on local low-power hardware.",en,Google FLEURS (en_us),CC BY 4.0,train,5.120
+datasets/audio/en/en_0004_fleurs_spk103.wav,"What is the total balance on account number four five six?",en,Google FLEURS (en_us),CC BY 4.0,validation,3.640
+datasets/audio/en/en_0005_fleurs_spk104.wav,"All items on shelf three are eligible for immediate discount.",en,Google FLEURS (en_us),CC BY 4.0,test,4.780
+datasets/audio/es/es_0001_fleurs_spk201.wav,"El sistema de cobro requiere transcripción precisa en tiempo real.",es,Google FLEURS (es_419),CC BY 4.0,train,4.320
+datasets/audio/es/es_0002_fleurs_spk201.wav,"Por favor verifique si el recibo del cliente se imprimió correctamente.",es,Google FLEURS (es_419),CC BY 4.0,train,4.100
+datasets/audio/es/es_0003_fleurs_spk202.wav,"StoreListener procesa señales acústicas en hardware local de bajo consumo.",es,Google FLEURS (es_419),CC BY 4.0,train,5.350
+datasets/audio/es/es_0004_fleurs_spk203.wav,"¿Cuál es el saldo total en la cuenta número cuatro cinco seis?",es,Google FLEURS (es_419),CC BY 4.0,validation,3.900
+datasets/audio/es/es_0005_fleurs_spk204.wav,"Todos los artículos del estante tres tienen descuento directo.",es,Google FLEURS (es_419),CC BY 4.0,test,4.650

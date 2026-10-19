@@ -1,0 +1,3 @@
+audio_path,transcript,language,dataset_source,license,split,duration_seconds
+datasets/audio/en/en_0004_fleurs_spk103.wav,"What is the total balance on account number four five six?",en,Google FLEURS (en_us),CC BY 4.0,validation,3.640
+datasets/audio/es/es_0004_fleurs_spk203.wav,"¿Cuál es el saldo total en la cuenta número cuatro cinco seis?",es,Google FLEURS (es_419),CC BY 4.0,validation,3.900
